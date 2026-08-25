@@ -1,0 +1,139 @@
+
+.user-profile-img {
+  object-fit: cover;
+}
+
+.user-profile-header-banner img {
+  object-fit: cover;
+}
+
+.nav-tabs .nav-link {
+  color: #0d4576; 
+  /* #6c757d */
+  font-weight: 500;
+  border: none;
+  padding: 1rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #0d6efd;
+  background-color: rgba(13, 110, 253, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+  color: #0d6efd;
+  background-color: rgba(13, 110, 253, 0.1);
+  border-bottom: 3px solid #0d6efd;
+}
+
+.nav-tabs .nav-item {
+  margin-bottom: -1px;
+  background: #59ddae;
+}
+
+.tab-content {
+  border: 1px solid #dee2e6;
+  border-top: none;
+  padding: 1.5rem;
+  border-radius: 0 0 0.375rem 0.375rem;
+}
+
+
+/* Custom styles for the profile header */
+.card {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
+.rounded-circle {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+
+
+/* user-profile.css */
+
+/* Make form controls smaller */
+.form-control-sm, .form-select-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+/* Make form labels smaller */
+.form-label.small {
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+/* Reduce spacing between form elements */
+.mb-3 {
+  margin-bottom: 0.75rem !important;
+}
+
+/* Adjust tab styling for better appearance */
+.nav-tabs .nav-link {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Make the profile header more compact */
+.user-profile-header-banner img {
+  height: 150px !important;
+}
+
+.user-profile-img {
+  width: 120px !important;
+  height: 120px !important;
+  margin-top: -60px !important;
+}
+
+/* Adjust card body padding for a more compact look */
+.card-body {
+  padding: 1rem;
+}
+
+/* Adjust tab content padding */
+.tab-content {
+  padding: 1rem 0;
+}
+
+/* Make the profile info more compact */
+.d-flex.flex-wrap.gap-4 {
+  gap: 1rem !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 0.75rem;
+  }
+  
+  .nav-tabs .nav-link {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .user-profile-img {
+    width: 100px !important;
+    height: 100px !important;
+    margin-top: -50px !important;
+  }
+}

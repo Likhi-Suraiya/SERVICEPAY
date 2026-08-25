@@ -1,0 +1,69 @@
+[
+    {
+        "header": "",
+        "items": [
+            {
+                "text": "Dashboard",
+                "icon": "bx bx-home",
+                "available": true,
+                "link": "/blil/dashboard"
+            },
+            {
+                "text": "Home",
+                "icon": "bx bx-map",
+                "available": true,
+                "link": "/blil/home"
+            },
+            {
+                "text": "Customer Details",
+                "icon": "bx bx-user",
+                "available": true,
+                "link": "/blil/owners"
+            },
+            {
+                "text": "Asset Type",
+                "icon": "bx bx-cube",
+                "available": true,
+                "link": "/blil/lifts"
+            },
+            {
+                "text": "Service Invoice",
+                "icon": "bx bx-wrench",
+                "available": true,
+                "link": "/blil/services"
+            },
+            {
+                "text": "Invoice Approval",
+                "icon": "bx bx-check-shield",
+                "available": true,
+                "link": "/blil/approvals"
+            },
+            {
+                "text": "Payment",
+                "icon": "bx bx-money",
+                "available": true,
+                "link": "/blil/payments"
+            }
+        ]
+    },
+
+    {
+        "header": "REPORTS",
+        "items": [
+            {
+                "text": "Reports",
+                "icon": "bx bx-file",
+                "available": true,
+                "link": "/blil/reports",
+                "submenu":
+                 [
+        { "text": "Collection & Dues",  "icon": "bx bx-money",       "available": true, "link": "/blil/reports/collection-dues" },
+        { "text": "Service Completion", "icon": "bx bx-check-circle", "available": true, "link": "/blil/reports/service" },
+        { "text": "Advance Ledger",     "icon": "bx bx-wallet",      "available": true, "link": "/blil/reports/advance" },
+        { "text": "Zone Summary",       "icon": "bx bx-map",         "available": true, "link": "/blil/reports/zone" },
+        { "text": "Customer Statement", "icon": "bx bx-user-circle", "available": true, "link": "/blil/reports/customer" }
+               ]
+            }
+         ]
+      }
+   ]

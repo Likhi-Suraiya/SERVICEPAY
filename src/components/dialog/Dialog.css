@@ -1,0 +1,105 @@
+/* components/Dialog.css */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  min-width: 300px;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.dialog-icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.dialog-body {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.first-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.second-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dialog.success {
+  border-top: 4px solid #18b03b;
+}
+
+.dialog.error {
+  border-top: 4px solid #dc3545;
+}
+
+.dialog.warning {
+  border-top: 4px solid #ffc107;
+}
+
+.dialog.info {
+  border-top: 4px solid #17a2b8;
+}
+
+.dialog.confirm {
+  border-top: 4px solid #57b908;
+}
+
+.dialog.confirm .dialog-icon {
+  color: #ffc107;
+}
+
+/* .btn-warning {
+  background: #ffc107;
+  color: black;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+} */
+
+.btn-warning:hover {
+  background: #e0a800;
+}

@@ -1,0 +1,463 @@
+.notification-counter-badge {
+  top: -8px;
+  right: -8px;
+  font-size: 0.6rem;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-show {
+  position: "absolute";
+  inset: "0px auto auto 0px";
+  margin: "0px";
+  transform: "translate3d(-200px, 40px, 0px)";
+}
+
+/* Buffering/Animation styles for notification bell */
+.notification-bell {
+  position: relative;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.notification-bell.buffering {
+  animation: bellRing 2s infinite;
+  color: #ff6b6b !important;
+}
+
+.notification-bell.bellRing {
+  animation: bellRing 2s infinite;
+  color: #ff6b6b !important;
+}
+
+.notification-bell.pulsing {
+  animation: pulse 2s infinite;
+  color: #ff6b6b !important;
+}
+
+.notification-bell.shaking {
+  animation: shake 0.5s ease-in-out infinite;
+  color: #ff6b6b !important;
+}
+
+@keyframes bellRing {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: rotate(-10deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+/* Glow effect for new notifications */
+.notification-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    filter: drop-shadow(0 0 2px rgba(255, 107, 107, 0.7));
+  }
+  to {
+    filter: drop-shadow(0 0 6px rgba(255, 107, 107, 1));
+  }
+}
+
+/* Loading dots animation */
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.loading-dots span {
+  animation: loading 1.4s ease-in-out infinite both;
+  background-color: currentColor;
+  border-radius: 50%;
+  display: inline-block;
+  height: 4px;
+  width: 4px;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes loading {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/*========================== custom button animations for Suggested DO button ===================*/
+/* Very small continuous bounce animation */
+@keyframes continuous-bounce-very-small {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 0 0 rgba(5, 92, 173, 0.3);
+  }
+  25% {
+    transform: scale(1.2) translateY(-1px);
+    box-shadow: 0 1px 3px rgba(5, 92, 173, 0.5);
+  }
+  50% {
+    transform: scale(1.4) translateY(-2px);
+    box-shadow: 0 2px 4px rgba(5, 92, 173, 0.7);
+  }
+  75% {
+    transform: scale(1.2) translateY(-1px);
+    box-shadow: 0 1px 3px rgba(5, 92, 173, 0.5);
+  }
+}
+
+@keyframes continuous-bounce-micro {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 0 0 rgba(5, 92, 173, 0.3);
+  }
+  50% {
+    transform: scale(1.3) translateY(-1px);
+    box-shadow: 0 1px 3px rgba(5, 92, 173, 0.6);
+  }
+}
+
+@keyframes continuous-bounce-subtle {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 0 0 rgba(5, 92, 173, 0.3);
+  }
+  33% {
+    transform: scale(1.13) translateY(-1px);
+    box-shadow: 0 1px 2px rgba(5, 92, 173, 0.4);
+  }
+  66% {
+    transform: scale(1.18) translateY(-1px);
+    box-shadow: 0 1px 3px rgba(5, 92, 173, 0.5);
+  }
+}
+
+/* Apply very small continuous animations */
+.continuous-bounce-very-small {
+  animation: continuous-bounce-very-small 1.5s infinite ease-in-out;
+  transform-origin: center;
+}
+
+.continuous-bounce-micro {
+  animation: continuous-bounce-micro 1.5s infinite ease-in-out;
+  transform-origin: center;
+}
+
+.continuous-bounce-subtle {
+  animation: continuous-bounce-subtle 1.5s infinite ease-in-out;
+  transform-origin: center;
+}
+
+.suggested-do-btn {
+  background: linear-gradient(to right, #055cad, #0284c7);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  text-wrap: nowrap;
+  cursor: pointer;
+  display: inline-block;
+  min-width: 150px;
+  text-align: center;
+  transition: none;
+}
+
+.suggested-do-btn:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.dropdown-notifications-list .text-center {
+  padding: 15px 0;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Domain-specific navbar theme for runner.rflgroupbd.com */
+.rfl-navbar {
+  background-color: #c6efe2 !important;
+  color: #ffffff !important;
+}
+
+/* ============== NEW LAYOUT STRUCTURE FOR FIXED NAVBAR AND SCROLLABLE CONTENT ============== */
+
+/* Layout structure */
+.layout-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.layout-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Sidebar styles */
+.layout-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1030;
+  transition: width 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Main content area */
+.layout-page {
+  flex: 1;
+  margin-left: 260px; /* Width of expanded sidebar */
+  width: calc(100% - 260px);
+  height: 100vh;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* When sidebar is collapsed */
+.layout-collapsed .layout-page {
+  margin-left: 80px; /* Width of collapsed sidebar */
+  width: calc(100% - 80px);
+}
+
+/* Navbar fixed at top */
+.layout-navbar {
+  position: sticky !important;
+  top: 0;
+  width: 100%;
+  z-index: 1020;
+  flex-shrink: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Content wrapper - this will scroll */
+.content-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh - 60px); /* Subtract navbar height */
+  padding-bottom: 60px; /* Space for footer */
+}
+
+/* Footer fixed at bottom */
+.footer {
+  position: sticky !important;
+  bottom: 0;
+  width: 100%;
+  z-index: 1020;
+  flex-shrink: 0;
+  background-color: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  padding: 10px 0;
+}
+
+/* Remove the previous padding-bottom from layout-page */
+.layout-page {
+  padding-bottom: 0;
+}
+
+/* Footer text styles */
+.footer .text-center {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Style for when sidebar is collapsed */
+.layout-collapsed .footer {
+  left: 80px !important;
+  width: calc(100% - 80px);
+}
+
+/* Ensure content doesn't get hidden behind fixed elements */
+.content-wrapper > div {
+  min-height: 100%;
+}
+
+/* Smooth scrolling */
+.content-wrapper {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for content */
+.content-wrapper::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.content-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.content-wrapper::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.content-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Domain-specific footer theme for runner.rflgroupbd.com */
+.rfl-navbar + .footer {
+  background-color: #c6efe2 !important;
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+.rfl-navbar + .footer .text-center {
+  color: #ffffff !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .layout-page {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  
+  .layout-menu.mobile-show {
+    transform: translateX(0);
+  }
+  
+  .content-wrapper {
+    height: calc(100vh - 56px); /* Smaller navbar on mobile */
+  }
+  
+  .footer {
+    padding: 8px 0;
+    font-size: 0.8rem;
+  }
+  
+  .layout-collapsed .footer {
+    left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* Fix for mobile menu backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  cursor: pointer;
+}
+
+
+/* Add to your layout.css */
+/* Mobile layout - keep icons fixed */
+@media (max-width: 768px) {
+  .layout-navbar {
+    min-height: 80px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  
+  .navbar-nav-right {
+    padding: 0.5rem 1rem !important;
+  }
+  
+  /* Time display on mobile - same design as desktop */
+  .current-time-display {
+    font-size: 0.85rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa !important;
+  }
+  
+  .current-time-display .badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  /* Icon sizes */
+  .icon-md {
+    font-size: 1.3rem !important;
+  }
+  
+  /* Spacing between greeting and time */
+  .mb-1 {
+    margin-bottom: 0.25rem !important;
+  }
+  
+  /* Ensure icons stay in place */
+  .ms-auto {
+    margin-left: auto !important;
+  }
+  
+  /* Keep navbar items in row */
+  .navbar-nav {
+    flex-direction: row !important;
+  }
+}

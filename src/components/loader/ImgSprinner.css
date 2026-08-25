@@ -1,0 +1,66 @@
+/* ImgSprinner.css */
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(1px);
+  z-index: 9998;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-background {
+  position: relative;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.loading-container {
+  position: relative;
+}
+
+.loading-icon {
+  width: 155px;
+  height: 155px;
+  position: relative;
+}
+
+.logo-icon {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  left: 12%;
+  top: 12%;
+  object-fit: contain;
+  border-radius: 50px;
+}
+
+/* Loader styles */
+/* [data-loader] {
+  margin: 8px;
+} */
+
+[data-loader="logo-circle"] {
+  width: 155px;
+  height: 155px;
+  animation: circle infinite 0.75s linear;
+  border: 4px solid #e52d27;
+  border-top-color: transparent;
+  border-radius: 100%;
+  display: block;
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+

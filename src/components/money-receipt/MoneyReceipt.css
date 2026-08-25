@@ -1,0 +1,183 @@
+/* components/MoneyReceipt/MoneyReceipt.css */
+.money-receipt-container {
+  font-family: 'Arial', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.money-receipt-header {
+  text-align: center;
+  padding: 20px;
+  border-bottom: 2px solid #e44d26;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.company-logo {
+  height: 60px;
+  margin-bottom: 10px;
+}
+
+.company-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #e44d26;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.company-address {
+  font-size: 12px;
+  color: #666;
+  margin: 5px 0;
+}
+
+.company-contact {
+  font-size: 11px;
+  color: #888;
+  margin: 0;
+}
+
+.receipt-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 20px 0;
+  color: #333;
+  text-decoration: underline;
+}
+
+.receipt-content {
+  padding: 20px;
+}
+
+.mr-number {
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.received-from {
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.amount-display {
+  font-weight: bold;
+  font-size: 13px;
+  color: #e44d26;
+}
+
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 11px;
+}
+
+.payment-table th {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 6px 4px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.payment-table td {
+  border: 1px solid #dee2e6;
+  padding: 6px 4px;
+  background-color: white;
+}
+
+.amount-in-words {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-left: 3px solid #e44d26;
+}
+
+.amount-in-words-label {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.amount-in-words-text {
+  font-size: 11px;
+  margin-left: 10px;
+}
+
+.receipt-footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer-left {
+  flex: 1;
+}
+
+.footer-right {
+  flex: 1;
+  text-align: right;
+}
+
+.footer-note {
+  font-size: 9px;
+  color: #666;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.footer-detail {
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.footer-detail-label {
+  font-weight: bold;
+}
+
+.sales-purpose {
+  margin-top: 20px;
+  font-size: 11px;
+}
+
+.print-button {
+  background: linear-gradient(135deg, #e44d26 0%, #c1351e 100%);
+  border: none;
+  padding: 8px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.print-button:hover {
+  background: linear-gradient(135deg, #c1351e 0%, #a52a1a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(228, 77, 38, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .money-receipt-container {
+    margin: 10px;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .footer-row {
+    flex-direction: column;
+  }
+  
+  .footer-right {
+    text-align: left;
+    margin-top: 20px;
+  }
+}

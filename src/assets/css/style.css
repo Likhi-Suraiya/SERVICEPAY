@@ -1,0 +1,27 @@
+/* Add this to your CSS file */
+.layout-menu.collapsed {
+  width: 80px;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.layout-menu.collapsed .app-brand-text,
+.layout-menu.collapsed .menu-header-text,
+.layout-menu.collapsed .menu-link div,
+.layout-menu.collapsed .menu-sub,
+.layout-menu.collapsed .badge {
+  display: none !important;
+}
+
+.layout-menu.collapsed .menu-link {
+  justify-content: center;
+}
+
+.layout-menu.collapsed .menu-icon {
+  margin-right: 0;
+}
+
+.layout-menu {
+  width: 260px;
+  transition: width 0.3s ease;
+}

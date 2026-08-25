@@ -1,0 +1,18 @@
+
+{
+  "/": "Home",
+  "/home": "Home",
+  "/blil/dashboard": "Dashboard",
+  "/blil/owners": "Customer Details",
+  "/blil/lifts": "Asset Type",
+  "/blil/services": "Service Invoice",
+  "/blil/approvals": "Invoice Approval",
+  "/blil/payments": "Payment",
+  "/blil/reports": "Reports",
+  "/blil/reports/collection-dues": "Collection & Dues",
+  "/blil/reports/service": "Service Completion",
+  "/blil/reports/advance": "Advance Ledger",
+  "/blil/reports/zone": "Zone Summary",
+  "/blil/reports/customer": "Customer Statement"
+}
+
