@@ -19,8 +19,7 @@
 
 // src/api/baseurl.js
 
-// Dev  (npm run dev)   -> "/api"  -> Vite proxy -> http://172.17.107.221:8082/v1
-// Prod (npm run build) -> calls the backend directly (backend already allows CORS)
+
 
 export const API_BASE_URL = import.meta.env.DEV
   ? "/api"

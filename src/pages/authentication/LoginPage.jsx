@@ -1,318 +1,217 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// src/pages/authentication/LoginPage.jsx — ServicePay login
+// Order360-style card with Partner / Staff toggle.
+// Staff  -> existing loginUser (authapi) + AuthContext
+// Partner -> portalLogin (portalapi) -> /portal
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Form, Button, Spinner } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./page-auth.css";
-import { AuthWrapper } from "./AuthWrapper";
-import { loginUser } from "../../api/authapi";
 import { useAuth } from "../../context/AuthContext";
-import ThreeStringLoader from "../../components/loader/ThreeStringLoader";
-import { portalLogin, setPortalUser } from "../../api/portalapi"; 
-import {
-  getBrowserName,
-  getOSName,
-  getDeviceType,
-  fetchIPAddress,
-} from "../../utils/deviceInfo";
+import { loginUser } from "../../api/authapi";
+import { portalLogin, setPortalUser } from "../../api/portalapi";
+
+const APP_VERSION = "1.0.0"; // shown in the footer — update as you release
 
 export const LoginPage = () => {
-  const { login } = useAuth();
-  const [formData, setFormData] = useState({
-    userid: "",
-    password: "",
-    rememberMe: false,
-  });
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [deviceInfo, setDeviceInfo] = useState({
-    os: "Unknown",
-    device: "Unknown",
-    browser: "Unknown",
-    ip: "Unknown",
-  });
-
-  const [loginType, setLoginType] = useState("Staff");
-
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  // Fetch device info (display only)
-  useEffect(() => {
-    const loadDeviceInfo = async () => {
-      try {
-        const ip = await fetchIPAddress();
-        setDeviceInfo({
-          os: getOSName(),
-          device: getDeviceType(),
-          browser: getBrowserName(),
-          ip,
-        });
-      } catch (error) {
-        console.error("Error loading device info:", error);
-        setDeviceInfo({
-          os: getOSName(),
-          device: getDeviceType(),
-          browser: getBrowserName(),
-          ip: "Unknown",
-        });
-      }
-    };
-    loadDeviceInfo();
-  }, []);
+  const [loginType, setLoginType] = useState("Partner"); // "Partner" | "Staff"
+  const [userid, setUserid] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [busy, setBusy] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.userid) newErrors.userid = "Staff ID is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    return newErrors;
-  };
-
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const browser = (() => {
+    const ua = navigator.userAgent;
+    if (ua.includes("Edg")) return "Edge";
+    if (ua.includes("Chrome")) return "Chrome";
+    if (ua.includes("Firefox")) return "Firefox";
+    if (ua.includes("Safari")) return "Safari";
+    return "Browser";
+  })();
+  const os = navigator.userAgent.includes("Windows")
+    ? "Windows"
+    : navigator.userAgent.includes("Mac")
+    ? "macOS"
+    : navigator.userAgent.includes("Android")
+    ? "Android"
+    : navigator.userAgent.includes("iPhone")
+    ? "iOS"
+    : "OS";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length > 0) {
-      toast.error("Please fill in all required fields.");
+    if (!userid.trim() || !password) {
+      toast.warn("Enter your User ID and password");
       return;
     }
-
-    setIsLoading(true);
-
+    setBusy(true);
     try {
-      // --- PARTNER LOGIN ---
       if (loginType === "Partner") {
-        try {
-          const user = await portalLogin(formData.userid, formData.password);
-          setPortalUser(user);
-          
-          toast.success("Partner login successful!");
-          
-          // Check if password change is required
-          if (user.mustChangeYn === "Y") {
-            navigate("/portal/change-password");
-          } else {
-            navigate("/portal");
-          }
-          return; // Exit early - staff flow untouched below
-        } catch (portalError) {
-          toast.error(portalError.message || "Invalid customer ID or password");
-          setIsLoading(false);
-          return;
+        // ---------- CUSTOMER / PARTNER ----------
+        const u = await portalLogin(userid.trim(), password);
+        setPortalUser(u);
+        navigate(u.mustChange ? "/portal/change-password" : "/portal");
+      } else {
+        // ---------- STAFF ----------
+        const res = await loginUser({ userid: userid.trim(), password });
+        if (res.successCode === "2000" && res.data) {
+          toast.success("Login successful!");
+          // staff-only: 3-arg login (userData, menu, rememberMe)
+          login(res.data, res.menu, false);
+          navigate("/blil/dashboard", { replace: true });
+        } else {
+          toast.error(res.successMessage || "Login failed");
         }
       }
-
-      // --- STAFF LOGIN (existing logic) ---
-      const response = await loginUser({
-        userid: formData.userid,
-        password: formData.password,
-      });
-      console.log("Login response:", response);
-
-      if (response.successCode === "2000") {
-        toast.success("Login successful!");
-        // staff-only: 3-arg login (userData, menu, rememberMe)
-        login(response.data, response.menu, formData.rememberMe);
-        navigate("/blil/dashboard");
-      } else {
-        toast.error(response.successMessage || "Login failed");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      if (error.response) {
-        const d = error.response.data;
-        toast.error(
-          d?.successMessage || d?.SuccessMessage || d?.message || "Login failed. Please try again."
-        );
-      } else {
-        toast.error("Cannot reach the server. Please check your connection.");
-      }
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.successMessage ||
+          err.message ||
+          "Login failed — please try again"
+      );
     } finally {
-      setIsLoading(false);
+      setBusy(false);
     }
   };
 
-  // Add login type toggle UI (optional - add this if you want a switcher)
-  const handleLoginTypeChange = (type) => {
-    setLoginType(type);
-    // Clear form fields when switching
-    setFormData({
-      userid: "",
-      password: "",
-      rememberMe: false,
-    });
-    setErrors({});
-  };
+  const pill = (type) => ({
+    flex: 1,
+    padding: "9px 0",
+    fontWeight: 600,
+    fontSize: "14px",
+    textAlign: "center",
+    cursor: "pointer",
+    borderRadius: "8px",
+    border:
+      loginType === type ? "2px solid #696cff" : "1px solid #d9dee3",
+    color: loginType === type ? "#696cff" : "#697a8d",
+    backgroundColor: "#fff",
+    transition: "all .15s ease",
+  });
 
   return (
-    <div className="login-page-wrapper">
-      {isLoading && <ThreeStringLoader />}
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        minHeight: "100vh",
+        background:
+          "url('/assets/img/backgrounds/bglogin.jpg') center / cover no-repeat, #eef3f8",
+        padding: "16px",
+      }}
+    >
       <ToastContainer position="top-right" />
-      <AuthWrapper>
-        <div className="text-center mb-4">
+      <div
+        className="bg-white shadow rounded-4 p-4"
+        style={{ width: "100%", maxWidth: "400px" }}
+      >
+        {/* Logo panel */}
+        <div
+          className="d-flex justify-content-center align-items-center mb-3"
+          style={{ minHeight: "150px", overflow: "hidden" }}
+        >
           <img
             src="/assets/img/SSP.png"
-            alt="ServicePay - Billing Made Simple"
-            className="img-fluid"
-            style={{ 
-              width: "900px", 
-              height: "100px",
-              objectFit: "contain"
-            }}
+            alt="ServicePay"
+            style={{ height: "120px", width: "auto", objectFit: "contain" }}
           />
         </div>
 
-        {/* Login Type Toggle */}
-        <div className="login-type-toggle mb-3 d-flex justify-content-center gap-3">
-          <button
-            type="button"
-            className={`btn btn-sm ${loginType === "Staff" ? "btn-primary" : "btn-outline-secondary"}`}
-            onClick={() => handleLoginTypeChange("Staff")}
-          >
-            Staff Login
-          </button>
-          <button
-            type="button"
-            className={`btn btn-sm ${loginType === "Partner" ? "btn-primary" : "btn-outline-secondary"}`}
-            onClick={() => handleLoginTypeChange("Partner")}
-          >
-            Partner Login
-          </button>
+        {/* Partner / Staff toggle */}
+        <div className="d-flex gap-2 mb-3">
+          <div style={pill("Partner")} onClick={() => setLoginType("Partner")}>
+            Partner
+          </div>
+          <div style={pill("Staff")} onClick={() => setLoginType("Staff")}>
+            Staff
+          </div>
         </div>
 
-        <form
-          id="formAuthentication"
-          className="mb-3"
-          onSubmit={handleSubmit}
-          noValidate
-        >
-          <div className="mb-3">
-            <label htmlFor="userid" className="form-label">
-              {loginType === "Partner" ? "Customer ID" : "Staff ID"}
-            </label>
-            <input
-              type="text"
-              className={`form-control${errors.userid ? " is-invalid" : ""}`}
-              id="userid"
-              value={formData.userid}
-              onChange={handleChange}
-              name="userid"
-              placeholder={loginType === "Partner" ? "Customer ID" : "Staff ID"}
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold mb-1">User ID</Form.Label>
+            <Form.Control
+              value={userid}
+              onChange={(e) => setUserid(e.target.value)}
+              placeholder={
+                loginType === "Partner" ? "Your Customer ID" : "Your Staff ID"
+              }
               autoFocus
             />
-            {errors.userid && (
-              <div className="invalid-feedback">{errors.userid}</div>
-            )}
-          </div>
+          </Form.Group>
 
-          <div className="mb-3 form-password-toggle">
-            <div className="d-flex justify-content-between">
-              <label className="form-label" htmlFor="password">
-                Password
-              </label>
-              {loginType === "Staff" && (
-                <Link
-                  aria-label="Go to Forgot Password Page"
-                  to="/auth/forgot-password"
-                >
-                  <small>Forgot Password?</small>
-                </Link>
-              )}
-            </div>
-            <div className="input-group input-group-merge">
-              <input
-                type={showPassword ? "text" : "password"}
-                autoComplete="true"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`form-control${errors.password ? " is-invalid" : ""}`}
-                name="password"
-                placeholder={loginType === "Partner" ? "Enter Password" : "Enter HRIS Password"}
-                aria-describedby="password"
-              />
-              <span
-                className="input-group-text cursor-pointer"
-                onClick={togglePasswordVisibility}
+          <Form.Group className="mb-3">
+            <div className="d-flex justify-content-between align-items-center mb-1">
+              <Form.Label className="fw-semibold mb-0">Password</Form.Label>
+              <small
+                className="text-primary"
                 style={{ cursor: "pointer" }}
+                onClick={() =>
+                  loginType === "Partner"
+                    ? toast.info(
+                        "Please contact the O&M office to reset your portal password."
+                      )
+                    : navigate("/auth/forgot-password")
+                }
               >
-                <i className={`bx ${showPassword ? "bx-show" : "bx-hide"}`}></i>
-              </span>
-              {errors.password && (
-                <div className="invalid-feedback d-block">{errors.password}</div>
-              )}
+                Forgot Password?
+              </small>
             </div>
-          </div>
-
-          <div className="mb-3" style={{ display: "none" }}>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="remember-me"
-                name="rememberMe"
-                checked={formData.rememberMe}
-                onChange={handleChange}
+            <div className="position-relative">
+              <Form.Control
+                type={showPw ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={
+                  loginType === "Partner"
+                    ? "First time? Use your Customer ID"
+                    : "Password"
+                }
               />
-              <label className="form-check-label" htmlFor="remember-me">
-                Remember Me
-              </label>
+              <i
+                className={`bx ${showPw ? "bx-show" : "bx-hide"} position-absolute`}
+                style={{
+                  right: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  color: "#697a8d",
+                }}
+                onClick={() => setShowPw(!showPw)}
+              ></i>
             </div>
-          </div>
+          </Form.Group>
 
-          <div className="mb-3">
-            <button
-              aria-label="Sign in"
-              className="btn btn-primary d-grid w-100"
-              type="submit"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <span className="spinner-border spinner-border-sm" role="status"></span>
-              ) : (
-                `Sign in as ${loginType}`
-              )}
-            </button>
-          </div>
+          <Button
+            type="submit"
+            className="w-100 fw-semibold"
+            style={{ backgroundColor: "#1a75ff", border: "none", padding: "10px" }}
+            disabled={busy}
+          >
+            {busy ? (
+              <>
+                <Spinner size="sm" animation="border" className="me-2" />
+                Signing in...
+              </>
+            ) : (
+              "Sign in"
+            )}
+          </Button>
+        </Form>
 
-          <div>
-            <Link to="/video-gallery">
-              <small>Help & Support</small>
-            </Link>
-          </div>
-
-          {deviceInfo && (
-            <div className="device-info d-flex flex-wrap gap-2 mt-2 text-normal small">
-              <small className="border-end pe-3">
-                <span className="fw-semibold">OS:</span> {deviceInfo.os}
-              </small>
-              <small className="border-end pe-3">
-                <span className="fw-semibold">Device:</span> {deviceInfo.device}
-              </small>
-              <small className="border-end pe-3">
-                <span className="fw-semibold">Browser:</span> {deviceInfo.browser}
-              </small>
-              <small className="d-none">
-                <span className="fw-semibold">IP:</span> {deviceInfo.ip}
-              </small>
-              <small>
-                <span className="fw-semibold">V:</span> 3.4.8
-              </small>
-            </div>
-          )}
-        </form>
-      </AuthWrapper>
+        {/* Footer */}
+        <div className="mt-3">
+          <Link to="/video-gallery" className="d-block small text-primary mb-1">
+            Help &amp; Support
+          </Link>
+          <small className="text-muted">
+            OS: {os} &nbsp;|&nbsp; Browser: {browser} &nbsp;|&nbsp; V:{" "}
+            {APP_VERSION} <span className="text-primary">(PRAN)</span>
+          </small>
+        </div>
+      </div>
     </div>
   );
 };

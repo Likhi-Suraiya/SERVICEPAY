@@ -209,32 +209,31 @@ const handleFieldBlur = (e) => {
   const [districtSearch, setDistrictSearch] = useState('');
   const [thanaSearch, setThanaSearch] = useState('');
 
-  // Free service auto-dates: end = start + 1 year - 1 day;
-  // paid start = day after free end (both only fill when empty)
-  useEffect(() => {
-    if (!formData.freeServiceStartDate) return;
-    if (!formData.freeServiceEndDate) {
-      const d = new Date(formData.freeServiceStartDate);
-      d.setFullYear(d.getFullYear() + 1);
-      d.setDate(d.getDate() - 1);
-      setFormData((prev) => ({
-        ...prev,
-        freeServiceEndDate: d.toISOString().slice(0, 10),
-      }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.freeServiceStartDate]);
+ 
+  // useEffect(() => {
+  //   if (!formData.freeServiceStartDate) return;
+  //   if (!formData.freeServiceEndDate) {
+  //     const d = new Date(formData.freeServiceStartDate);
+  //     d.setFullYear(d.getFullYear() + 1);
+  //     d.setDate(d.getDate() - 1);
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       freeServiceEndDate: "",
+  //     }));
+  //   }
+   
+  // }, [formData.freeServiceStartDate]);
 
-  useEffect(() => {
-    if (!formData.freeServiceEndDate || formData.paidServiceStartDate) return;
-    const d = new Date(formData.freeServiceEndDate);
-    d.setDate(d.getDate() + 1);
-    setFormData((prev) => ({
-      ...prev,
-      paidServiceStartDate: d.toISOString().slice(0, 10),
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.freeServiceEndDate]);
+  // useEffect(() => {
+  //   if (!formData.freeServiceEndDate || formData.paidServiceStartDate) return;
+  //   const d = new Date(formData.freeServiceEndDate);
+  //   d.setDate(d.getDate() + 1);
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     paidServiceStartDate: "",
+  //   }));
+   
+  // }, [formData.freeServiceEndDate]);
 
   // Auto-calculate net payable amount
 useEffect(() => {
@@ -978,6 +977,7 @@ const filteredThanas = useMemo(() => {
                   value={formData.paidServiceStartDate}
                   onChange={handleChange}
                   disabled={viewMode}
+                  placeholder="DD-MM-YYYY"
                   isInvalid={!!errors.paidServiceStartDate}
                 />
                 <Form.Control.Feedback type="invalid">
