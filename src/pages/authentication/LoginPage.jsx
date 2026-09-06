@@ -11,13 +11,13 @@ import { useAuth } from "../../context/AuthContext";
 import { loginUser } from "../../api/authapi";
 import { portalLogin, setPortalUser } from "../../api/portalapi";
 
-const APP_VERSION = "1.0.0"; // shown in the footer — update as you release
+const APP_VERSION = "1.0.0"; 
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [loginType, setLoginType] = useState("Partner"); // "Partner" | "Staff"
+  const [loginType, setLoginType] = useState("Partner"); 
   const [userid, setUserid] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
