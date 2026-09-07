@@ -98,7 +98,7 @@ export const LoginPage = () => {
       style={{
         minHeight: "100vh",
         background:
-          "url('/assets/img/backgrounds/bglogin.jpg') center / cover no-repeat, #eef3f8",
+          "url('/assets/img/backgrounds/bglogin.jpg') center / cover no-repeat,rgba(97, 139, 180, 0.73)",
         padding: "16px",
       }}
     >
