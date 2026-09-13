@@ -19,13 +19,14 @@ import {
 } from "../../../utils/commonMethods";
 import { AddOwnerModal } from "./AddOwnerModal";
 import {
-  getOwners,
+  getOwnersFiltered,
   getAllAssets,
   insertOwner,
   updateOwner,
   deleteOwner,
 } from "../../../api/ownerapi";
 import { uploadOwnerDoc } from "../../../api/ownerdocapi";
+import { getLookups } from "../../../api/lookupapi";
 import { getActionBy } from "../../../utils/commonMethods";
 
 export const OwnersList = () => {
@@ -40,20 +41,41 @@ export const OwnersList = () => {
 
  const actionBy = getActionBy(user) || user?.userName || user?.username || "WEB";
 
-  const loadOwners = async () => {
+  // ---- on-demand loading: nothing loads until the user searches ----
+  const [zones, setZones] = useState([]);
+  const [zoneFilter, setZoneFilter] = useState("");
+  const [serverSearch, setServerSearch] = useState("");
+  const [searched, setSearched] = useState(false);
+
+  const loadOwners = async (zone = zoneFilter, term = serverSearch) => {
     setIsLoading(true);
     try {
       const [ownerRows, assetRows] = await Promise.all([
-        getOwners(),
-        getAllAssets().catch(() => []), // assets are optional; don't block the list
+        getOwnersFiltered(zone, term),
+        getAllAssets().catch(() => []), // for the Lift/Gen columns + export
       ]);
       setOwners(ownerRows);
       setAllAssets(assetRows);
+      setSearched(true);
     } catch (err) {
       toast.error(err.message || "Failed to load owners");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSearch = () => {
+    if (!zoneFilter && !serverSearch.trim()) {
+      toast.warn("Pick a zone or type something to search — loading all 3,000+ customers at once is slow");
+      return;
+    }
+    setCurrentPage(1);
+    loadOwners(zoneFilter, serverSearch.trim());
+  };
+
+  const handleLoadAll = () => {
+    setCurrentPage(1);
+    loadOwners("", "");
   };
 
   // customerId -> [assets]
@@ -68,7 +90,10 @@ export const OwnersList = () => {
   }, [allAssets]);
 
   useEffect(() => {
-    loadOwners();
+    // load only the zone list for the filter — the data waits for Search
+    getLookups()
+      .then((lk) => setZones(lk.zones || []))
+      .catch(() => {});
   }, []);
 
   // Search and Pagination
@@ -255,26 +280,60 @@ export const OwnersList = () => {
               </Button>
             </div>
 
-            {/* Search and Controls */}
+            {/* Zone filter + server search — data loads on demand */}
             <div className="row g-2 mb-3">
-              <div className="col-12 col-md-6">
+              <div className="col-12 col-md-3">
+                <Form.Select
+                  size="sm"
+                  value={zoneFilter}
+                  onChange={(e) => setZoneFilter(e.target.value)}
+                >
+                  <option value="">Select Zone</option>
+                  {zones.map((z) => (
+                    <option key={z.zoneName || z.name} value={z.zoneName || z.name}>
+                      {z.zoneName || z.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </div>
+              <div className="col-12 col-md-4">
                 <InputGroup size="sm">
                   <InputGroup.Text>
                     <FaSearch />
                   </InputGroup.Text>
                   <Form.Control
-                    placeholder="Search by name, company, phone..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Customer ID, name, company or phone..."
+                    value={serverSearch}
+                    onChange={(e) => setServerSearch(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   />
                 </InputGroup>
               </div>
-              <div className="col-12 col-md-6 d-flex justify-content-md-end gap-2">
+              <div className="col-12 col-md-5 d-flex gap-2 justify-content-md-end">
+                <Button variant="primary" size="sm" onClick={handleSearch} disabled={isLoading}>
+                  <FaSearch className="me-1" />
+                  Search
+                </Button>
                 <Button
                   variant="outline-secondary"
                   size="sm"
-                  onClick={handleExport}
+                  onClick={handleLoadAll}
+                  disabled={isLoading}
+                  title="Loads every customer — slow"
                 >
+                  Load All
+                </Button>
+                {/* <InputGroup size="sm" style={{ maxWidth: "200px" }}>
+                  <InputGroup.Text>
+                    <i className="bx bx-filter"></i>
+                  </InputGroup.Text>
+                  <Form.Control
+                    placeholder="Filter loaded rows..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </InputGroup> */}
+                <Button variant="outline-secondary" size="sm" onClick={handleExport}>
                   <i className="bx bx-export me-1"></i>
                   Export
                 </Button>
@@ -306,8 +365,16 @@ export const OwnersList = () => {
                     </tr>
                   ) : currentItems.length === 0 ? (
                     <tr>
-                      <td colSpan="9" className="text-center">
-                        No owners found
+                      <td colSpan="9" className="text-center text-muted py-4">
+                        {searched ? (
+                          "No owners found "
+                        ) : (
+                          <>
+                            <i className="bx bx-search-alt me-1"></i>
+                            Select a zone or type a search above, then press{" "}
+                            <strong>Search</strong>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ) : (

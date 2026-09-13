@@ -27,6 +27,19 @@ export const getOwners = async () => {
   return body.data ?? [];
 };
 
+// Zone + text filtered list (server-side) — used by the on-demand list page
+export const getOwnersFiltered = async (zone, search) => {
+  const params = new URLSearchParams();
+  if (zone) params.set("zone", zone);
+  if (search) params.set("search", search);
+  const body = await handle(
+    await fetch(`${API_BASE_URL}/BlilOwner/Filtered?${params.toString()}`, {
+      headers: HEADERS,
+    })
+  );
+  return body.data ?? [];
+};
+
 export const insertOwner = async (owner, actionBy) => {
   return handle(
     await fetch(`${API_BASE_URL}/BlilOwner/Insert`, {
