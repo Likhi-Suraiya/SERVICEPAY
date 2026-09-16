@@ -1,5 +1,5 @@
 // src/api/authapi.js
-import { API_BASE_URL, AUTH_USERNAME, AUTH_PASSWORD } from "./baseurl";
+import { API_BASE_URL, VITE_S_KEYL, AUTH_USERNAME, AUTH_PASSWORD } from "./baseurl";
 import axios from "axios";
 
 
@@ -50,10 +50,13 @@ export const loginUser = async (credentials) => {
         "Content-Type": "application/json",
         Accept: "application/json",
         
-        S_KEYL: import.meta.env.VITE_S_KEYL,
+        // S_KEYL: import.meta.env.VITE_S_KEYL,
+        S_KEYL: VITE_S_KEYL,
       },
     }
   );
+
+  console.log("loginUser response:", res.data);
 
   const body = res.data || {};
 

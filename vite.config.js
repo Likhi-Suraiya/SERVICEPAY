@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         "/api": {  // Changed from /apihris to match web.config
           //  target: env.VITE_HRIS || "https://localhost:7129",
-          target: env.VITE_HRIS || "http://172.17.107.221:8082", // Changed to match the proxy rule
+          target: env.VITE_URL_1 || "http://care360.propertylifts.com", // Changed to match the proxy rule
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/api/, "/v1"), // Changed to match the proxy rule
