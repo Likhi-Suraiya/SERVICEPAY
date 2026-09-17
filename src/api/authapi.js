@@ -56,8 +56,6 @@ export const loginUser = async (credentials) => {
     }
   );
 
-  console.log("loginUser response:", res.data);
-
   const body = res.data || {};
 
   // ASP.NET Core may serialize as camelCase (default) OR PascalCase,
@@ -96,7 +94,7 @@ export const changePassword = async ({ staffId, currentPassword, newPassword }) 
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        S_KEYL: import.meta.env.VITE_S_KEYL,
+        S_KEYL: VITE_S_KEYL,
       },
     }
   );

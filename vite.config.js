@@ -4,7 +4,6 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current directory
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
@@ -25,12 +24,11 @@ export default defineConfig(({ mode }) => {
         "Cache-Control": "no-store",
       },
       proxy: {
-        "/api": {  // Changed from /apihris to match web.config
-          //  target: env.VITE_HRIS || "https://localhost:7129",
-          target: env.VITE_URL_1 || "http://care360.propertylifts.com", // Changed to match the proxy rule
+        "/api": {
+          target: env.VITE_API_TARGET || "http://172.17.107.221:8082",
           changeOrigin: true,
           secure: false,
-          rewrite: (path) => path.replace(/^\/api/, "/v1"), // Changed to match the proxy rule
+          rewrite: (path) => path.replace(/^\/api/, "/v1"),
         },
       },
       historyApiFallback: true,

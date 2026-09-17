@@ -2,7 +2,7 @@
 // Order360-style card with Partner / Staff toggle.
 // Staff  -> existing loginUser (authapi) + AuthContext
 // Partner -> portalLogin (portalapi) -> /portal
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Form, Button, Spinner } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,7 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 import { loginUser } from "../../api/authapi";
 import { portalLogin, setPortalUser } from "../../api/portalapi";
 
-const APP_VERSION = "1.0.0"; 
+const APP_VERSION = "1.1.0"; 
 
 export const LoginPage = () => {
   const navigate = useNavigate();
